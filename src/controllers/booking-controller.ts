@@ -30,3 +30,20 @@ export async function postBooking(req: AuthenticatedRequest, res: Response) {
     return res.sendStatus(httpStatus.FORBIDDEN);
   }
 }
+
+export async function changeBooking(req: AuthenticatedRequest, res: Response) {
+  const userId = req.userId as number;
+  const bookingId: number = parseInt(req.params.bookingId);
+  const roomId: number = req.body.roomId;
+  if (!bookingId || !roomId || isNaN(roomId)) return res.sendStatus(404);
+
+  try {
+    await bookingService.changeBooking(userId, bookingId, roomId);
+    return res.status(httpStatus.OK).send({ bookingId: bookingId });
+  } catch (error) {
+    if (error.name === 'ForbiddenError') {
+      return res.status(httpStatus.FORBIDDEN).send({ message: error.message });
+    }
+    return res.status(500).send(error.message);
+  }
+}

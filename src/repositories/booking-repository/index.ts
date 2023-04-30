@@ -43,10 +43,33 @@ async function postBooking(userId: number, roomId: number) {
   return booking.id;
 }
 
+async function verifyBooking(bookingId: number) {
+  const booking = await prisma.booking.findUnique({
+    where: {
+      id: bookingId,
+    },
+  });
+  if (booking == null) return undefined;
+  return booking.userId;
+}
+
+async function changeBooking(bookingId: number, roomId: number) {
+  await prisma.booking.update({
+    where: {
+      id: bookingId,
+    },
+    data: {
+      roomId: roomId,
+    },
+  });
+}
+
 const bookingRepository = {
   getBooking,
   verifyRoom,
   postBooking,
+  verifyBooking,
+  changeBooking,
 };
 
 export { bookingRepository };
