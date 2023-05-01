@@ -44,6 +44,6 @@ export async function changeBooking(req: AuthenticatedRequest, res: Response) {
     if (error.name === 'ForbiddenError') {
       return res.status(httpStatus.FORBIDDEN).send({ message: error.message });
     }
-    return res.status(500).send(error.message);
+    return res.status(404).send(error.message);
   }
 }
